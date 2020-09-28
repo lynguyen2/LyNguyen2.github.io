@@ -79,14 +79,15 @@ animals.push(bird);
 var friends = [];
 
 function getRandom(array) {
-   return Math.floor(Math.random() * animals.length)
+   return Math.floor(Math.random() * array.length)
   
 };
-animals[getRandom(animals)];
-friends.push(animals[getRandom(animals)].name);
+var i = getRandom(animals);
+animals[i];
+friends.push(animals[i].name);
 console.log(friends);
 
-animals.push(friends.friends[0]);
+duck["friends"] = friends
 
 /**
  * Nice work! You're done Part 1. Pat yourself on the back and

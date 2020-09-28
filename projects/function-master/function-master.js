@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 function objectValues(object) {
-
+   return Object.values(object);
 } 
 
 //////////////////////////////////////////////////////////////////////
@@ -11,7 +11,8 @@ function objectValues(object) {
 //////////////////////////////////////////////////////////////////////
 
 function keysToString(object) {
-
+    Object.keys(object);
+    return Object.keys(object).join(" ");
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -19,7 +20,8 @@ function keysToString(object) {
 //////////////////////////////////////////////////////////////////////
 
 function valuesToString(object) {
-    
+    Object.values(object);
+    return Object.values(object).join(" "); 
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -27,7 +29,10 @@ function valuesToString(object) {
 //////////////////////////////////////////////////////////////////////
 
 function arrayOrObject(collection) {
-    
+    if(typeof collection == 'object' && collection !== null && !(collection instanceof Date)) {
+        return "array";
+    }
+        return "object";
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -35,7 +40,7 @@ function arrayOrObject(collection) {
 //////////////////////////////////////////////////////////////////////
 
 function capitalizeWord(string) {
-    
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -43,7 +48,11 @@ function capitalizeWord(string) {
 //////////////////////////////////////////////////////////////////////
 
 function capitalizeAllWords(string) {
-    
+    var capAll = string.toLowerCase().split(" ");
+    for (var i = 0; i < capAll.length; i++){
+        capAll[i] = capAll[i].charAt(0).toUpperCase() + capAll[i].substr(1);
+        }
+        return capAll.join(" ");
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -51,7 +60,9 @@ function capitalizeAllWords(string) {
 //////////////////////////////////////////////////////////////////////
 
 function welcomeMessage(object) {
-
+    var newStr = Object.values(object);
+    newStr = newStr.charAt(0).toUpperCase() + newStr.slice(1);
+    return `Welcome ${newStr}} !`
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -59,7 +70,9 @@ function welcomeMessage(object) {
 //////////////////////////////////////////////////////////////////////
 
 function profileInfo(object) {
-
+    var nameVar = Object.values(object["name"].charAt(0).toUpperCase() + object["name"].slice(1));
+    var speciesVar = Object.values(object["species"].charAt(0).toUpperCase() + object["species"].slice(1));
+    return `${nameVar.join("")} is a ${speciesVar.join("")}`
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -67,7 +80,11 @@ function profileInfo(object) {
 //////////////////////////////////////////////////////////////////////
 
 function maybeNoises(object) {
-
+    if (object.hasOwnProperty('noises')) {
+        return object['noises'].join(' ');
+    } else {
+        return ('there are no noises');
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -75,7 +92,12 @@ function maybeNoises(object) {
 //////////////////////////////////////////////////////////////////////
 
 function hasWord(string, word) {
-
+    for (var i = 0; i < string.length; i++) {
+      if(string.match(word)) {
+        return true;
+    }
+        return false;
+}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -83,6 +105,8 @@ function hasWord(string, word) {
 //////////////////////////////////////////////////////////////////////
 
 function addFriend (name, object) {
+    object['friends'].push(name);
+    return object;
 
 }
 
@@ -100,7 +124,24 @@ function isFriend(name, object) {
 
 function nonFriends(name, array) {
 
+// create a nonFriends array to be returned at the end after my logic
+// I: name <strings> && array <full of Objects>
+// O: array full of all the non friends of the name argument
+// C: must look through array of objects and find that name argument and then using the person friends array use that and loop again  through the array of objects and see who isn't in the friends of array of that person
+let notFriends = [];
+//loop through the array of objects
+for (let i = 0; i < array.length; i++) {
+// must look through array of objects and find that name argument
+// check the object name does not match the name and loop with includes method through 
+   if ((array[i]['name'] !== name) && !array[i]['friends'].includes(name)){
+// then push the not friend into not friends
+notFriends.push(array[i]['name']);
+  }
 }
+// after done with logic we will return notFriends array
+return notFriends;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // Function 14 - Update Object ///////////////////////////////////////
@@ -123,8 +164,8 @@ function removeProperties(object, array) {
 //////////////////////////////////////////////////////////////////////
 
 function dedup(array) {
-
-}
+   return array.filter((a, b) => array.indexOf(a) === b)
+};
 
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
