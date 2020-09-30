@@ -70,7 +70,7 @@
     });
 
     /* global  profileInfo*/
-    QUnit.test("profileInfo() : Should take an object with a name an a species and return '<Name> is a <Species>'", function(assert){
+    QUnit.test("profileInfo() : Should take an object with a name and a species and return '<Name> is a <Species>'", function(assert){
       assert.equal(profileInfo({name: "jake", species: "dog"}), "Jake is a Dog");
       assert.equal(profileInfo({name: "reggie", species: "dog"}), "Reggie is a Dog");
     });

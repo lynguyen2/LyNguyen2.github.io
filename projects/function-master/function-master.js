@@ -20,19 +20,23 @@ function keysToString(object) {
 //////////////////////////////////////////////////////////////////////
 
 function valuesToString(object) {
-    Object.values(object);
-    return Object.values(object).join(" "); 
+    var total = [];
+    for (let key in object){
+        if (typeof object[key] === "string"){
+        total.push(object[key]);  
+    }
 }
-
+    return total.join(" ");
+}
 //////////////////////////////////////////////////////////////////////
 // Function 4 - Array or Object //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 function arrayOrObject(collection) {
-    if(typeof collection == 'object' && collection !== null && !(collection instanceof Date)) {
-        return "array";
-    }
+    if(typeof collection === 'object' && !Array.isArray(collection)) {
         return "object";
+    }
+        return "array";
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -60,9 +64,8 @@ function capitalizeAllWords(string) {
 //////////////////////////////////////////////////////////////////////
 
 function welcomeMessage(object) {
-    var newStr = Object.values(object);
-    newStr = newStr.charAt(0).toUpperCase() + newStr.slice(1);
-    return `Welcome ${newStr}} !`
+    var newStr = Object.values(object["name"].charAt(0).toUpperCase() + object["name"].slice(1));
+    return `Welcome ${newStr.join("")}!`
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -80,13 +83,15 @@ function profileInfo(object) {
 //////////////////////////////////////////////////////////////////////
 
 function maybeNoises(object) {
-    if (object.hasOwnProperty('noises')) {
-        return object['noises'].join(' ');
-    } else {
-        return ('there are no noises');
+     if (object && object.noises) { 
+        if (Array.isArray(object.noises)) { 
+            if (object.noises.length > 0) { 
+                return object.noises.join(' ');
+            }
+        }
     }
+    return 'there are no noises';
 }
-
 //////////////////////////////////////////////////////////////////////
 // Function 10 - Has Words ///////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -115,8 +120,15 @@ function addFriend (name, object) {
 //////////////////////////////////////////////////////////////////////
 
 function isFriend(name, object) {
-
-}
+  if(Array.isArray(object.friends) && object.hasOwnProperty("friends")) {
+    for(var i = 0; i < object.friends.length; i++) {
+      if(name === object.friends[i]) {
+        return true;  
+      }
+    }    
+  }  
+ return false;   
+} 
 
 //////////////////////////////////////////////////////////////////////
 // Function 13 - Non-Friends /////////////////////////////////////////
@@ -148,14 +160,26 @@ return notFriends;
 //////////////////////////////////////////////////////////////////////
 
 function updateObject(object, key, value) {
-
-}
-
+//if the input key is the same key, update its value.
+    if (object.hasOwnProperty(key) === Object.keys(object)){
+      return object[key];
+    } else {
+      object[key] = value;
+    }
+    return object;
+  }
 //////////////////////////////////////////////////////////////////////
 // Function 15 - Remove Properties ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 function removeProperties(object, array) {
+for (var key in object) {
+    for (let i = 0; i < array.length; i++) {
+        if (key === array[i]) {
+            delete object[key];
+        }
+    }
+}
 
 }
 

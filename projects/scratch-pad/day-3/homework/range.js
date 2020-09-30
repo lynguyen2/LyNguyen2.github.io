@@ -25,7 +25,7 @@ function range(start, end) {
     // YOUR CODE GOES BELOW HERE //
     if (start > end) {
         var reverse = [];
-        for (var i = end.length - 1; i >= start; i--){
+        for (var i = start; i >= end; i--){
             reverse.push(i);
         }
         return reverse;
