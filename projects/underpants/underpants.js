@@ -22,6 +22,8 @@ var _ = {};
 */
 
 _.identity = function(value) {
+    //parameter is a value
+    //returns the same value unchanged
     return value;
 }
 
@@ -47,10 +49,14 @@ _.identity = function(value) {
 */
 
 _.typeOf = function(value) {
+    //input is a value
      if (value instanceof Array) {
+    //if the input value is an array, return "array"
         return "array";
     } else if (value === null) {
+    //if the input value is null, return null
         return "null";
+    //if the input value is anything else, return the type of value as a string
     } else {
         return typeof value;
     }
@@ -74,16 +80,23 @@ _.typeOf = function(value) {
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
 
-_.first = function (array, number) {
-//If <array> is not an array, return []
-    if (!Array.isArray(array)) {
+_.first = function(array, number) {
+//input is an array and a number
+    if (!Array.isArray(array) || number < 0) {
+        //If <array> is not an array or the number is smaller than zero, return []
         return [];
-    } else if (number !== number) {
+//If <number> is not given or not a number, return just the first element in <array>.
+    } else if (!Number.isFinite(number)) {
         return array[0]
-    } else if (number < 0) {
+    } else if (array < number) {
+//if the number input is a bigger than the length of the array, return the array
         return array;
+    } else {
+//Otherwise, return the same index values as the input number parameter by using slice
+        return array.slice(0, number)
     }
 }
+
 
 /** _.last
 * Arguments:
@@ -102,16 +115,23 @@ _.first = function (array, number) {
 *   _.last(["a", "b", "c"], 1) -> "c"
 *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
 */
-
-_.last = function (array, number) {
-    if (!Array.isArray(array)) {
+//given a function with an array and a number as its parameters
+_.last = function(array, number) {
+    //return an empty array, if the array input isn't an array or the number input is < 0.
+    if (!Array.isArray(array) || number < 0) {
         return [];
-    } else if (number !== number) {
-        return array(array.length - 1);
-    } else {
+    //if the input number is not a number, then return the last element of the array
+    } else if (!Number.isFinite(number)) {
+        return array[array.length - 1];
+    //if the number is bigger than the array's length, return the array
+    } else if (array.length < number) {
         return array;
+    //return the last portion of the array that matches the number input
+    } else {
+        return array.slice(Math.max(array.length - (number)));
     }
-}
+    };
+
 
 /** _.indexOf
 * Arguments:
@@ -128,7 +148,19 @@ _.last = function (array, number) {
 *   _.indexOf(["a","b","c"], "c") -> 2
 *   _.indexOf(["a","b","c"], "d") -> -1
 */
-
+ //given a function with an array and a value
+_.indexOf = function (array, value) {
+ //start a for loop to iterate through all the elements of the array
+    for(let i = 0; i < array.length; i++) {
+    //if any of the array elements equal the value input, then return the index of that element
+        if(array[i] === value) {
+          let returnValue = i++;
+            return returnValue;
+        } 
+    }
+    //if no array elements equal the value input, then return -1
+    return -1;
+}
 
 /** _.contains
 * Arguments:
@@ -144,7 +176,12 @@ _.last = function (array, number) {
 * Examples:
 *   _.contains([1,"two", 3.14], "two") -> true
 */
-
+//I:function with the parameters of an array and a value
+//O: Boolean value
+_.contains = function (array, value){
+//includes will determine if the array has the same value in it
+    return array.includes(value) ? true : false;
+}
 
 /** _.each
 * Arguments:
@@ -162,6 +199,24 @@ _.last = function (array, number) {
 *      -> should log "a" "b" "c" to the console
 */
 
+//each function takes in a collection of an array/object and a function
+_.each = function(collect, func) {
+    //if the collect parameter is an array, create a for loop
+  if(Array.isArray(collect)) {
+    for(var i = 0; i < collect.length; i++){
+    //loop through all the elements in the arry
+      func(collect[i], i, collect);
+    //call the function once for each element in the array
+    }
+  } else {
+      //if the input collect is an object, create a for in loop 
+    for (var key in collect) {
+        //call the function once for each of the keys and values in the object
+      func(collect[key], key, collect);
+    }
+  }
+}
+
 
 /** _.unique
 * Arguments:
@@ -172,8 +227,10 @@ _.last = function (array, number) {
 * Examples:
 *   _.unique([1,2,2,4,5,6,5,2]) -> [1,2,4,5,6]
 */
- _.unique = function (array) {
-     
+ _.unique = function(array) {
+     //takes in one parameter that's an array
+     return array.filter((a, b) => array.indexOf(a) === b)
+     //returns a new array of all alements that were duplicates removed
  }
 
 /** _.filter
@@ -191,7 +248,20 @@ _.last = function (array, number) {
 * Extra Credit:
 *   use _.each in your implementation
 */
-
+//inputs: array and a function
+_.filter = function(array, func) {
+//create an empty array to store all the elements for which we are filtering out of the original array
+    let newArray = [];
+    _.each(array, function(element, index, array) {
+    //use each to iterate through all the values of the array
+        if (func(element, index, array)) {
+    //looks through each value in the list, returning an array of all the values that pass a truth test
+            newArray.push(element)
+        }
+    //push the filtered out elements into the newArray
+    });
+    return newArray;
+};
 
 /** _.reject
 * Arguments:
@@ -201,10 +271,25 @@ _.last = function (array, number) {
 *   1) call <function> for each element in <array> passing the arguments:
 *      the element, it's index, <array>
 *   2) return a new array of elements for which calling <function> returned false
-*   3) This is the logical inverse if _.filter(), you must use _.filter() in your implementation
+*   3) This is the logical inverse of _.filter(), you must use _.filter() in your implementation
 * Examples:
 *   _.reject([1,2,3,4,5], function(e){return e%2 === 0}) -> [1,3,5]
 */
+
+_.reject = function (array, func) {
+    //create a new array to collect all elements that reject  
+    let newArray = [];
+    //using each function to pass in all the elements and indexes of an array as the arguments
+    _.each(array, function(element, index, array) {
+    //if the elements are returning false, transfer it to the new array.
+        if (!func(element, index, array)) {
+    //one array of elements to have the trues & one array to have falses
+            newArray.push(element);
+        }
+    //push the rejects into the newArray
+    });
+    return newArray;
+};
 
 
 /** _.partition
@@ -225,6 +310,25 @@ _.last = function (array, number) {
 *   }); -> [[2,4],[1,3,5]]
 }
 */
+//takes in two parameters: array and a function
+_.partition = function(array, func){
+    var truthy = [];
+    var falsy = [];
+//create two empty arrays for the split arrays to go into
+    _.each(array, function(element, index, array) {
+//use the each function to iterate the function through every element of the array
+        let collect = func(element, index, array);
+        if (collect) {
+//if the function has only truthy values, push into the truthy empty array
+            truthy.push(element);
+        } else if (!collect) {
+         falsy.push(element);
+//if the function has only falsey values, push into the falsy empty array
+        }
+    });
+//remember to return the now split 2 sub-arrays
+    return [truthy, falsy];
+};
 
 
 /** _.map
@@ -243,6 +347,18 @@ _.last = function (array, number) {
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
 
+//parameters: collection and a function
+//I: either an array or an object and a function
+//O: new array of values
+
+_.map = function(collection, func){
+    let newArray = []; 
+    _.each(collection, function(thing, i, array){ 
+        newArray.push(func(thing, i, array));
+        });
+        return newArray;
+    
+};
 
 /** _.pluck
 * Arguments:
@@ -254,8 +370,15 @@ _.last = function (array, number) {
 * Examples:
 *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
 */
-
-
+//I: an array of objects and a property
+//O: all the values of a specified key in a new array
+  _.pluck = function(array, key){
+//using map will produce a new array of values
+ return array.map(function(obj) {
+    return obj[key];
+  });
+}
+ 
 /** _.every
 * Arguments:
 *   1) A collection
@@ -277,6 +400,22 @@ _.last = function (array, number) {
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
 
+//parameters: collection & function
+//I: array or object and a function
+//O: return true if ALL of the values from both array or object pass,
+//   return false if a minimum of ONE value from both array or object is false
+//   if function parameter is not provided as a parameter, return true if the element is truthy.
+//   if it's anything else, then return false.
+
+_.every = function(collection, func) {
+    var check = func || _.identity;
+    for (var i = 0;i < collection.length;i++) {
+        if (! check(collection[i])) {
+            return false;
+        }
+    }
+    return true;
+};
 
 /** _.some
 * Arguments:
@@ -299,6 +438,28 @@ _.last = function (array, number) {
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
 
+//parameters: collection & function
+//I: array or object and a function
+//O: return true if most of the values from both array or object pass,
+//   return true if a minimum of ONE value from both array or object is false
+//   if all values are falst, then return false
+//   if function parameter is not provided as a parameter, return true if the element is truthy.
+//   if it's anything else, then return false.
+
+_.some = function(collection, func) {
+    let result = false;
+    _.each(collection, function(element, index, collection){
+        if (typeof func !== 'function'){
+            if (element){
+            result = true;    
+            }
+        }
+        else if (func(element, index, collection)){
+            result = true;
+        }
+    });
+    return result;
+ };
 
 /** _.reduce
 * Arguments:
@@ -319,6 +480,35 @@ _.last = function (array, number) {
 *   _.reduce([1,2,3], function(previousSum, currentValue, currentIndex){ return previousSum + currentValue }, 0) -> 6
 */
 
+_.reduce = function(array, callbackFunction, initialValue){
+    //check if initialValue is defined
+    if (initialValue !== undefined) {
+    //if initialValue value passed, create a new variable called result and initialize
+        var result = initialValue;
+    //loop through the array starting at index 0 with the each function
+        _.each(array, function(element, index, array) {
+    //assign the result of passing each element to the function to the result variable
+            result = callbackFunction(result, element, index, array)
+        })
+        return result;
+        
+    //if "seed" is undefined
+    } else {
+    //create new result variable and initialize it to the first element in the input array
+    var result = array[0];
+    //loop through the array starting at index 1 using the each function
+    _.each(array, function(element, index, array) {
+    //only reassign result if the index is not 0
+        if (index !== 0) {
+    //assign the result of passing each element to the function to the result variable
+            result = callbackFunction(result, element, index, array);
+        }
+    })
+    return result;
+}
+}
+
+
 
 /** _.extend
 * Arguments:
@@ -327,14 +517,21 @@ _.last = function (array, number) {
 *   ...Possibly more objects
 * Objectives:
 *   1) Copy properties from <object 2> to <object 1>
-*   2) If more objects are passed in, copy their properties to <object 1> as well, in the order they are passed in.
+*   2) If more objects are passed in, copy their properties to <ob ject 1> as well, in the order they are passed in.
 *   3) Return the update <object 1>
 * Examples:
 *   var data = {a:"one"};
 *   _.extend(data, {b:"two"}); -> data now equals {a:"one",b:"two"}
 *   _.extend(data, {a:"two"}); -> data now equals {a:"two"}
 */
-
+_.extend = function(...obj){
+    //declare a finalTarget object
+    var finalTarget = {};
+    //Object.assign will copy all properties from object2 and paste them in object 1
+    finalTarget = Object.assign(...obj);
+    //remember to return the update object
+        return finalTarget;
+}
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
