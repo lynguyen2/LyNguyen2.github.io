@@ -11,6 +11,8 @@
                     body of function
                     return statement
                 };
+                
+                declarationName();
  *
  * 2. BREAKDOWN OF SYNTAX:
  * Four parts are need: function word to start your function, declare your function
@@ -37,12 +39,27 @@
  * 7. Scopes - Functions can see and modify variables in parents and global scopes. 
  * The inverse is NOT true. Because functions hoist, functions will hoist into memory
  * named function definitions and variables where it can be referenced at any time.
- * 
- * 8. Closures - Functions form closures around the data they house. If an object
- * returned from the function ans is held in memory somewhere (referenced), that 
- * closure stays alive, and data can continue to exist in these closures.
-**/ 
-// 9. EXAMPLE: Given a number, return the number increased by 1.
+**/
+// 8. Closures - Functions form closures around the data they house. A closure is 
+// an inner function that has access to the outer (enclosing) function’s variables.
+// The inner function has access not only to the outer function’s variables, but 
+// also to the outer function’s parameters. If an object returned from the function
+// is held in memory somewhere (referenced), that closure stays alive, and data 
+// can continue to exist in these closures. 
+// EXAMPLE OF CLOSURES:
+            function displayName(firstName, lastName){
+            var name = "Your name is ";
+                function fullName(){
+                // This inner function has access to the outer function's 
+                // variable, including its parameters
+                    return `${name} ${firstName} ${lastName}`;
+                }
+                return fullName();
+            }
+            displayName("Britney", "Spears");
+
+// 9. EXAMPLE OF FUNCTION:
+// Given a number, return the number increased by 1.
                var test = 11;
                function increase(number) {
                    number ++;
