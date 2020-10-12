@@ -85,14 +85,14 @@ var range = function(x, y) {
 // Example:  exponent(4,3);  // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
-   if (exp === 0) {
-        return 1;
-    } else {
-        return base * exponent(base, exp - 1);
-    }
-};
-
-  
+  if (exp === 0) {
+    return 1;
+  } else if (exp > 0){
+    return base * exponent(base, exp - 1);
+  } else {
+    return 1 / (base * exponent(base, -1 * exp - 1));
+  }
+}
 // 8. Determine if a number is a power of two.
 // powerOfTwo(1); // true
 // powerOfTwo(16); // true
@@ -347,6 +347,12 @@ var capitalizeWords = function(input) {
 // 27. Given an array of strings, capitalize the first letter of each index.
 // capitalizeFirst(['car', 'poop', 'banana']); // ['Car', 'Poop', 'Banana']
 var capitalizeFirst = function(array) {
+  if (array.length === 0){
+    return [];
+  }
+  var cappedWords = capitalizeFirst(array.slice(1, array.length));
+  cappedWords.unshift(array[0][0].toUpperCase() + array[0].substring(1));
+  return cappedWords
 };
 
 // 28. Return the sum of all even numbers in an object containing nested objects.
@@ -372,13 +378,17 @@ var flatten = function(arrays) {
 // letterTally('potato'); // {'p':1, 'o':2, 't':2, 'a':1}
 var letterTally = function(str, obj) {
   // BASE CASE: return an obj
-  if(str.length === 0){
-    return obj
-  } else {
-    let newValue = str[0].newValue;
-    obj[newValue] ? obj[newValue]++ : obj[newValue] = 1;
-    return letterTally(str.substring(1), obj);
-  }
+     if (!str.length) {
+        return {};
+    }
+    var first = str[str.length - 1];
+    var result = letterTally(str.slice(0, str.length - 1));
+    if (result[first] !== undefined) {
+        result[first]++
+    } else {
+        result[first] = 1;
+    }
+    return result;
   
   // RECURSIVE CASE: go through whole objects values and save the # of times
   // the string shows up in the object. 
@@ -391,7 +401,16 @@ var letterTally = function(str, obj) {
 // Example: compress([1, 2, 2, 3, 4, 4, 5, 5, 5]) // [1, 2, 3, 4, 5]
 // Example: compress([1, 2, 2, 3, 4, 4, 2, 5, 5, 5, 4, 4]) // [1, 2, 3, 4, 2, 5, 4]
 var compress = function(list) {
-  
+  if(!list.length){
+    return [];
+  }
+  var current = list[0];
+  var newArray = list[1];
+  var result = compress(list.slice(1));
+  if (current !== newArray){
+    result.unshift(current);
+  }
+  return result;
 };
 
 // 32. Augment every element in a list with a new value where each element is an array
@@ -405,7 +424,20 @@ var augmentElements = function(array, aug) {
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
 // minimizeZeroes([2,0,0,0,1,0,0,4]) // [2,0,1,0,4]
 var minimizeZeroes = function(array) {
-  
+   // BASE CASE: stop recursing when array is empty
+  if(!array.length){
+    return [];
+  }
+  // pull each version of array onto callstack
+  let result = minimizeZeroes(array.slice(1));
+  // if element !== 0, keep in result array
+  if (array[0] !== 0){
+    result.unshift(array[0]);
+  // if element === 0 and element is not equal to the next element, keep in result array
+  }else if((array[0] === 0) && (array[0] !== array[1])){
+    result.unshift(array[0]);
+  }
+  return result; // return new array
 };
 
 // 34. Alternate the numbers in an array between positive and negative regardless of
@@ -413,13 +445,52 @@ var minimizeZeroes = function(array) {
 // alternateSign([2,7,8,3,1,4]) // [2,-7,8,-3,1,-4]
 // alternateSign([-2,-7,8,3,-1,4]) // [2,-7,8,-3,1,-4]
 var alternateSign = function(array) {
+  // BASE CASE: stop recursing when the array is empty
+  if(!array.length){
+    return [];
+  }
+  // RECURSIVE CASE
+  // pull each version of array onto callstack
+  let result = alternateSign(array.slice(2));
+  // check element at index 1
+  if(array[1] < 0){
+    result.unshift(array[1]);
+  }else{
+    result.unshift(-array[1]);
+  }
+  // check element at index 0 (will unshift to the index before 1)
+  if(array[0] > 0){
+    result.unshift(array[0]);
+  }else{
+    result.unshift(-array[0]);
+  };
+  return result; // return new array
 };
+
 
 // 35. Given a string, return a string with digits converted to their word equivalent.
 // Assume all numbers are single digits (less than 10).
 // numToText("I have 5 dogs and 6 ponies"); // "I have five dogs and six ponies"
 var numToText = function(str) {
+
+  const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  const numText = [' ', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+  // BASE CASE: stop recursing when the string is empty
+  if(!str.length){
+    return '';
+  };
+  // RECURSIVE CASE
+  let result = [];
+  // if char is NaN, add to new array
+  if(nums.indexOf(Number(str[0])) === -1){
+    result.push(str[0]);
+  // if char is a number, add the corresponding word equivalent
+  }else{
+    result.push(numText[nums.indexOf(Number(str[0]))]);
+  }
+  return (result + numToText(str.slice(1))).toString();
 };
+
 
 // *** EXTRA CREDIT ***
 
