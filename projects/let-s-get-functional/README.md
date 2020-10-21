@@ -67,7 +67,7 @@ const _ = require('lodown-oliviasaborush');
 
 ### 7: `friendFirstLetterCount`
  - **Objective**: Find how many friends of a given customer have names that start with a given letter
- - **Input**: `Array`, `Customer`, `Letter`
+ - **Input**: `Array`, `Customer`, `Letter` 
  - **Output**: `Number`
  - **Constraints**:
 

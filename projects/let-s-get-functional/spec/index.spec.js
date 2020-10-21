@@ -185,11 +185,11 @@ describe('Let\'s Get Functional', function(){
       expect(result).to.be.true;
     });
 
-    // it('should find all customers that are friends', function () {
-    //   const result = friendsCount(data).sort();
-    //   const friends =  [ 'Buckner Kennedy', 'Doyle Erickson', 'Olga Newton', 'Shelly Walton' ];
-    //   expect(result).to.eql(friends);
-    // });
+    it('should find all customers that are friends', function () {
+      const result = friendsCount(data).sort();
+      const friends =  [ 'Buckner Kennedy', 'Doyle Erickson', 'Olga Newton', 'Shelly Walton' ];
+      expect(result).to.eql(friends);
+    });
 
     it('should find all customers that are friends with Olga Newton', function () {
       const result = friendsCount(data, 'Olga Newton').sort();
